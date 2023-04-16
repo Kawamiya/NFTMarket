@@ -1,14 +1,16 @@
 <template>
-    <nav>
-        <router-link to="/">NftMarketHome</router-link>
-        |
-        <router-link to="/user">UserInformation</router-link>
-        |
-        <router-link to="/create">CreateNft</router-link>
-    </nav>
+    <TopBar/>
     <router-view/>
 </template>
 
+<script>
+import TopBar from "@/components/TopBar";
+export default {
+    name:"App",
+    components: {TopBar},
+
+}
+</script>
 <style>
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
