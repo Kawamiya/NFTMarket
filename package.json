@@ -10,6 +10,7 @@
     "@openzeppelin/contracts": "^4.8.2",
     "core-js": "^3.8.3",
     "element-plus": "^2.3.3",
+    "ethers": "^6.3.0",
     "truffle-assertions": "^0.9.2",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",

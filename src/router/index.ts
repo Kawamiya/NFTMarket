@@ -1,19 +1,23 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import NftMarketHome from '../views/NftMarketHome.vue'
+import CreateNft from '../views/CreateNft.vue'
+import UserInformation from '../views/UserInformation.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'NftMarketHome',
+    component: NftMarketHome
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/user/:userId',
+    name: 'UserInformation',
+    component: UserInformation
+  },
+  {
+    path: '/create',
+    name: 'CreateNft',
+    component: CreateNft
   }
 ]
 

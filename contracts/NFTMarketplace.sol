@@ -212,8 +212,8 @@ contract NFTMarketplace is ERC721URIStorage, Ownable {
         uint targetTokenIndex = _idToNftIndex[tokenId];
         uint lastTokenId = _allNfts[lastTokenIndex];
 
-        _allNfts[targetTokenIndex] = lastTokenIndex;
-        _idToNftIndex[lastTokenIndex] = targetTokenIndex;
+        _allNfts[targetTokenIndex] = lastTokenId;
+        _idToNftIndex[lastTokenId] = targetTokenIndex;
 
         delete _idToNftIndex[tokenId];
         _allNfts.pop();
