@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTMarketplace is ERC721URIStorage {
+contract NFTMarketplace is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _listedItems;
@@ -42,7 +42,7 @@ contract NFTMarketplace is ERC721URIStorage {
 
     constructor() ERC721("MNFT", "MNFT"){}
 
-    function setListingPrice(uint newPrice) exteral onlyOwner{
+    function setListingPrice(uint newPrice) external onlyOwner {
         require(newPrice>0,"price must be at least 1 wei");
         listingPrice=newPrice;
     }
