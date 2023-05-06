@@ -3,7 +3,7 @@
         <nav style="padding: 0">
             <router-link to="/">NftMarketHome</router-link>
             |
-            <router-link to="/user">UserInformation</router-link>
+            <router-link :to="{name:'UserInformation',query:{userId:this.account}}">UserInformation</router-link>
             |
             <router-link to="/create">CreateNft</router-link>
         </nav>
@@ -31,7 +31,7 @@ export default {
     data() {
         return {
             avatar: "",
-            account: "",
+            account: "111222",
             balance: "",
             networkId: 0
         }

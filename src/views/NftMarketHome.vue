@@ -24,7 +24,6 @@
 
 <script>
 import Web3 from "web3"
-import { reactive, ref, onMounted } from "vue";
 import NFTMarketplace from "../../build/contracts/NFTMarketplace.json";
 import { ElMessage } from 'element-plus'
 
@@ -41,11 +40,6 @@ export default {
         getItems(){
             this.$store.watch(async (newState, oldState) => {
                 if (newState.contract !== undefined) {
-                    // const tokenURI = "https://frontend232.com";
-                    // await newState.contract.methods.mintToken(tokenURI,Web3.utils.toWei("13.25", "ether")).send({
-                    //     from: newState.account,
-                    //     value: newState.listPrice
-                    // });
                     this.items = await newState.contract.methods.getAllNftOnSale().call();
                     console.log(this.items)
                     if (this.items!=[]){
@@ -54,9 +48,7 @@ export default {
                             this.pic.push(picture)
                         });
                     }
-                    // console.log(this.pic)
                 }
-
             })
         },
         async mintItem() {

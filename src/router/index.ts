@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw} from 'vue-router'
 import NftMarketHome from '../views/NftMarketHome.vue'
 import CreateNft from '../views/CreateNft.vue'
 import UserInformation from '../views/UserInformation.vue'
@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     component: NftMarketHome
   },
   {
-    path: '/user/:userId',
+    path: '/user',
     name: 'UserInformation',
     component: UserInformation
   },
@@ -22,7 +22,8 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  // history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
