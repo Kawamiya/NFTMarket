@@ -106,7 +106,7 @@ contract NFTMarketplace is ERC721URIStorage, Ownable {
         _idToNftItem[tokenId].price=newPrice;
         _listedItems.increment();
     }
-    function placeNftUnSale(uint tokenId) public {
+    function placeNftUnSale(uint tokenId) public payable {
         require(ERC721.ownerOf(tokenId)==msg.sender, "not owner of this nft");
         require(_idToNftItem[tokenId].isListed==true,"Item is already unsale");
 

@@ -8,7 +8,7 @@ export default createStore({
         account: "",
         balance: "",
         networkId: 0,
-        contract: {},
+        contract: undefined,
         listPrice: ""
     },
     getters: {},
@@ -33,6 +33,8 @@ export default createStore({
             const contract = new web3.eth.Contract((NFTMarketplace as any).abi, NFTMarketplace.networks[networkId].address);
             let _listingPrice = Web3.utils.toWei("0.025", "ether");
             commit("InitWeb3", {web3,account,balance,networkId,contract,_listingPrice})
+            const networkType = await web3.eth.net.getNetworkType();
+            console.log(networkType);
         }
     },
     modules: {},

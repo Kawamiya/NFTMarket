@@ -18,7 +18,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create',
     name: 'CreateNft',
     component: CreateNft
-  }
+  },
 ]
 
 const router = createRouter({

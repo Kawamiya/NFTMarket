@@ -11,9 +11,9 @@
             <div v-html="avatar"></div>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <p>Account: {{account}}</p>
-                    <p>Balance: {{balance}} ETHs</p>
-                    <p>Network Id: {{networkId}}</p>
+                    <p>Account: {{ account }}</p>
+                    <p>Balance: {{ balance }} ETHs</p>
+                    <p>Network Id: {{ networkId }}</p>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -25,27 +25,31 @@
 <script>
 import jazzicon from "@metamask/jazzicon"
 import Web3 from "web3";
+
 export default {
     name: "TopBar",
     data() {
         return {
             avatar: "",
-            account:"",
-            balance:"",
-            networkId:0
+            account: "",
+            balance: "",
+            networkId: 0
         }
     },
-    methods:{
-        getUserInfo(){
-            this.account=this.$store.state.account;
-            this.balance=Web3.utils.fromWei(this.$store.state.balance,"ether");
-            this.networkId=this.$store.state.networkId;
+    methods: {
+        getUserInfo() {
+            this.$store.watch((newState,oldState)=>{
+                this.account = newState.account;
+                this.balance = Web3.utils.fromWei(newState.balance,"ether");
+                this.networkId = newState.networkId;
+            });
         }
     },
     created() {
+        this.$store.dispatch("getWeb3");
         this.avatar = jazzicon(40, Math.round(Math.random() * 10000000)).outerHTML
         this.getUserInfo()
-    }
+    },
 }
 </script>
 
@@ -57,7 +61,8 @@ export default {
     align-items: center;
 
 }
-p{
+
+p {
     padding: 5px;
     font-weight: 400;
     font-size: 1.1rem;

@@ -7,6 +7,8 @@ contract("NFTMarketplace", (accounts) => {
     let _contract;
     let _nftPrice = web3.utils.toWei("13.25", "ether");
     let _listingPrice = web3.utils.toWei("0.025", "ether");
+    console.log(typeof _listingPrice)
+    console.log(typeof  _nftPrice)
 
     before(async () => {
         _contract = await NFTMarketplace.deployed();
