@@ -8,7 +8,7 @@ contract("NFTMarketplace", (accounts) => {
     let _nftPrice = web3.utils.toWei("13.25", "ether");
     let _listingPrice = web3.utils.toWei("0.025", "ether");
     console.log(typeof _listingPrice)
-    console.log(typeof  _nftPrice)
+    console.log(typeof _nftPrice)
 
     before(async () => {
         _contract = await NFTMarketplace.deployed();
@@ -17,8 +17,13 @@ contract("NFTMarketplace", (accounts) => {
 
     describe("Mint token", () => {
         const tokenURI = "https://test.com";
+        const tokenURI2 = "http://wrong.com";
         before(async () => {
             await _contract.mintToken(tokenURI, _nftPrice, {
+                from: accounts[0],
+                value: _listingPrice
+            });
+            await _contract.mintToken(tokenURI2, _nftPrice, {
                 from: accounts[0],
                 value: _listingPrice
             });
@@ -65,12 +70,24 @@ contract("NFTMarketplace", (accounts) => {
         });
         it('should decrease listed item count', async function () {
             const listItemCount = await _contract.listItemsCount();
-            assert.equal(listItemCount, 0, "wrong listed item count");
+            assert.equal(listItemCount, 1, "wrong listed item count");
         });
         it('should change owner', async function () {
             const currentOwner = await _contract.ownerOf(1);
             assert.equal(currentOwner, accounts[1], "wrong listed item count");
         });
+        it('should not change owner if buy owned item',async function () {
+            try{
+                await _contract.buyNft(2, {
+                    from: accounts[1],
+                    value: web3.utils.toWei("13", "ether")
+                });
+            }catch (e) {
+                const currentOwner = await _contract.ownerOf(2);
+                assert.equal(currentOwner, accounts[0], "wrong listed item count");
+            }
+        });
+
     });
 
     describe("list all Nft on sale", () => {
@@ -90,13 +107,13 @@ contract("NFTMarketplace", (accounts) => {
             });
         })
         it('should list all Nft on sale', async function () {
-            const NftItemList =  await _contract.getAllNftOnSale();
+            const NftItemList = await _contract.getAllNftOnSale();
             // console.log(NftItemList);
-            assert.equal(NftItemList[0].tokenId,2,"wrong Nft list");
+            assert.equal(NftItemList[0].tokenId, 2, "wrong Nft list");
         });
     });
 
-    describe("list owned Nfts by owner",()=>{
+    describe("list owned Nfts by owner", () => {
         before(async () => {
             // let _nftPrice = web3.utils.toWei("13.25","ether");
             await _contract.mintToken("http://111.com", web3.utils.toWei("10", "ether"), {
@@ -108,13 +125,13 @@ contract("NFTMarketplace", (accounts) => {
                 value: _listingPrice
             });
         })
-        it('should list all owned Nfts',async function () {
-            const ownedItem = await _contract.getAllNftByOwner({from:accounts[3]});
+        it('should list all owned Nfts', async function () {
+            const ownedItem = await _contract.getAllNftByOwner({from: accounts[3]});
             // console.log(ownedItem);
-            assert.equal(ownedItem.length,2,"owned item length doesn't match");
+            assert.equal(ownedItem.length, 2, "owned item length doesn't match");
         });
     })
-    describe("burn token",()=>{
+    describe("burn token", () => {
         before(async () => {
             // let _nftPrice = web3.utils.toWei("13.25","ether");
             await _contract.mintToken("http://bbc.com", web3.utils.toWei("4.1", "ether"), {
@@ -127,16 +144,16 @@ contract("NFTMarketplace", (accounts) => {
             });
         })
         it('should have 2 token for current account 4', async function () {
-            const items = await _contract.getAllNftByOwner({from:accounts[4]});
-            assert.equal(items.length,2,"wrong item number");
+            const items = await _contract.getAllNftByOwner({from: accounts[4]});
+            assert.equal(items.length, 2, "wrong item number");
         });
-        it('should only have 1 token after burn',async function () {
-            const items = await _contract.getAllNftByOwner({from:accounts[4]});
+        it('should only have 1 token after burn', async function () {
+            const items = await _contract.getAllNftByOwner({from: accounts[4]});
             await _contract.burnToken(items[0].tokenId);
             const currentItemNumber1 = await _contract.balanceOf(accounts[4]);
-            assert.equal(currentItemNumber1,1,"wrong number after burn token");
-            const currentItemNumber2= await _contract.getAllNftByOwner({from:accounts[4]});
-            assert.equal(currentItemNumber2.length,1,"wrong item number after burn token");
+            assert.equal(currentItemNumber1, 1, "wrong number after burn token");
+            const currentItemNumber2 = await _contract.getAllNftByOwner({from: accounts[4]});
+            assert.equal(currentItemNumber2.length, 1, "wrong item number after burn token");
         });
     })
 })
