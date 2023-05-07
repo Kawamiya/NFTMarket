@@ -57,7 +57,7 @@ contract("NFTMarketplace", (accounts) => {
         });
     })
 
-    describe("But NFT", () => {
+    describe("Buy NFT", () => {
         before(async () => {
             await _contract.buyNft(1, {
                 from: accounts[1],
