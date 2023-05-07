@@ -1,6 +1,6 @@
 # NFT Marketplace
 ## Overview
-This is a Nfr Marketplace Dapp, users can upload their pictures and create Ntf items, and can also buy and sell Nft items. 
+This is a Nft Marketplace Dapp, users can upload their pictures and create Nft items, and can also buy and sell Nft items. 
 ## Usage
 This project is based on Vue and truffle, so basicly you should install these 2 framework.
 ### import dependencies
