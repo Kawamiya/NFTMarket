@@ -1,6 +1,7 @@
 <template>
-    <el-input v-model="url"></el-input>
-    <el-button @click="mintItem">mint a token</el-button>
+<!--    <el-input v-model="url"></el-input>-->
+<!--    <el-button @click="mintItem">mint a token</el-button>-->
+    <h1>All Nft Items on-sale</h1>
     <div class="main" v-for="(item,index) in items" :key="item.tokenId">
         <el-dropdown placement="right">
             <el-card class="box-card">

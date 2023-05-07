@@ -67,7 +67,7 @@
       <div class="mb-6 w-80 lg:w-96 mx-auto box flex flex-col">
         <input
           v-model="price"
-          placeholder="price：ether,integer"
+          placeholder="price: ether,integer"
           class="
             bg-white
             rounded
@@ -104,23 +104,23 @@
 </template>
 
 <script lang="ts" setup>
-import plusImg from "../../../../Users/24656/OneDrive/文档/2023Spring/6883/NFTMarket-master/NFTMarket-master/src/assets/plus.jpeg";
+import Web3 from "web3"
+import plusImg from "@/assets/plus.jpeg";
 import { onMounted, ref, unref } from "vue";
-import { isImage, isTxt, isSizeValid, fileToBase64 } from "../../../../Users/24656/OneDrive/文档/2023Spring/6883/NFTMarket-master/NFTMarket-master/src/utils/files";
+import { ipfsUrl } from "../../pinata.config";
+import { pinFileToIPFS, pinJSONToIPFS } from "@/utils/useIpfs";
+import { isImage, isTxt, isSizeValid, fileToBase64 } from "@/utils/files";
 import { useStore } from "vuex";
+import NFTMarketplace from "../../build/contracts/NFTMarketplace.json";
 
 const fileInput = ref<HTMLElement | null>(null);
 const uploadFile = ref<File | null>(null);
 const imgBase64 = ref<string>("");
 
-const store = useStore();
-
-
 async function uploadImage(e: Event): Promise<void> {
   const el = e.target as HTMLInputElement;
   const files=el.files as FileList;
   if (files.length > 0) {
-    // 必须是文本或图片且大小不超过200kb
     if (!isImage(files[0])) {
       alert("only image within 200k");
       return;
@@ -137,6 +137,57 @@ function resetFile(): void {
     uploadFile.value = null;
     imgBase64.value = "";
     console.log();
+}
+
+const price=ref<string>("")
+
+async function submit(): Promise<void> {
+  const isinteger= /^[0-9]*[1-9][0-9]*$/.test(price.value);
+  console.log(isinteger);
+  if(!price.value || !isinteger) {
+    alert("price should be integer");
+    return;
+  }
+  if(uploadFile.value){
+    try{
+      let result = await pinFileToIPFS(uploadFile.value);
+      console.log(result.data.IpfsHash);
+
+      if (result){
+        const ipfsHash= result.data.IpfsHash;
+        const url = `${ipfsUrl}${ipfsHash}`;
+        //console.log(url);
+        let web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        //console.log("accounts",typeof accounts[0]);
+        const balance = await web3.eth.getBalance(accounts[0]);
+        //console.log("balance",typeof balance);
+        const networkId = await web3.eth.net.getId();
+        //console.log("networkId",typeof networkId);
+        let _listingPrice = Web3.utils.toWei("0.025", "ether");
+        const contract = new web3.eth.Contract(NFTMarketplace.abi,NFTMarketplace.networks[networkId].address);
+        const nftcreate= await contract.methods.mintToken(url, Web3.utils.toWei(price.value, "ether")).send({
+                from: accounts[0],
+                value: _listingPrice
+            });
+        console.log(nftcreate);
+        //const nftonsale = await contract.methods.placeNftOnSale(nftcreate, Web3.utils.toWei(price.value, "ether"))
+        if (nftcreate){
+          alert("Succeed");
+        } 
+        else{
+          alert("failed");
+        }
+      }
+      else{
+        alert(result.statusText);
+      }
+    }
+    catch(e){
+      console.error(e);
+      alert("request failed");
+    }
+  }
 }
 
 </script>
